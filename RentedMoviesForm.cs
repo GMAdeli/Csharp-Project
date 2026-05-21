@@ -11,7 +11,7 @@ namespace MovieRental
         private Panel panelHeader;
         private Label lblHeader;
         private Button btnRefresh;
-        private Button btnClose;
+        private Button btnReturn;
         private ComboBox cboMovieFilter;
         private Label lblFilter;
 
@@ -25,7 +25,7 @@ namespace MovieRental
         private void InitializeComponent()
         {
             this.Text = "Rented Movies";
-            this.Size = new System.Drawing.Size(900, 600);
+            this.Size = new System.Drawing.Size(950, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -60,7 +60,7 @@ namespace MovieRental
 
             dgvRentals = new DataGridView();
             dgvRentals.Location = new System.Drawing.Point(20, 130);
-            dgvRentals.Size = new System.Drawing.Size(850, 380);
+            dgvRentals.Size = new System.Drawing.Size(900, 280);
             dgvRentals.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRentals.AllowUserToAddRows = false;
             dgvRentals.AllowUserToDeleteRows = false;
@@ -68,31 +68,33 @@ namespace MovieRental
             dgvRentals.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRentals.BackgroundColor = System.Drawing.Color.White;
             dgvRentals.BorderStyle = BorderStyle.FixedSingle;
+            dgvRentals.MultiSelect = false;
+
+            btnReturn = new Button();
+            btnReturn.Text = "RETURN SELECTED MOVIE";
+            btnReturn.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
+            btnReturn.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
+            btnReturn.ForeColor = System.Drawing.Color.White;
+            btnReturn.Location = new System.Drawing.Point(20, 425);
+            btnReturn.Size = new System.Drawing.Size(180, 35);
+            btnReturn.FlatStyle = FlatStyle.Flat;
+            btnReturn.Click += BtnReturn_Click;
 
             btnRefresh = new Button();
             btnRefresh.Text = "REFRESH";
             btnRefresh.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnRefresh.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnRefresh.ForeColor = System.Drawing.Color.White;
-            btnRefresh.Location = new System.Drawing.Point(680, 515);
+            btnRefresh.Location = new System.Drawing.Point(820, 425);
             btnRefresh.Size = new System.Drawing.Size(100, 35);
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Click += BtnRefresh_Click;
 
-            btnClose = new Button();
-            btnClose.Text = "CLOSE";
-            btnClose.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
-            btnClose.BackColor = System.Drawing.Color.LightGray;
-            btnClose.Location = new System.Drawing.Point(790, 515);
-            btnClose.Size = new System.Drawing.Size(80, 35);
-            btnClose.FlatStyle = FlatStyle.Flat;
-            btnClose.Click += (s, e) => this.Close();
-
             this.Controls.Add(lblFilter);
             this.Controls.Add(cboMovieFilter);
             this.Controls.Add(dgvRentals);
+            this.Controls.Add(btnReturn);
             this.Controls.Add(btnRefresh);
-            this.Controls.Add(btnClose);
             this.Controls.Add(panelHeader);
         }
 
@@ -105,10 +107,26 @@ namespace MovieRental
             {
                 filterList.Add(new MovieFilterItem { Id = movie.MovieId, Name = movie.MovieTitle });
             }
+
+            int previousSelectedId = 0;
+            if (cboMovieFilter.SelectedItem != null)
+            {
+                previousSelectedId = ((MovieFilterItem)cboMovieFilter.SelectedItem).Id;
+            }
+
             cboMovieFilter.DataSource = null;
             cboMovieFilter.DataSource = filterList;
             cboMovieFilter.DisplayMember = "Name";
             cboMovieFilter.ValueMember = "Id";
+
+            if (previousSelectedId > 0 && filterList.Any(f => f.Id == previousSelectedId))
+            {
+                cboMovieFilter.SelectedItem = filterList.FirstOrDefault(f => f.Id == previousSelectedId);
+            }
+            else
+            {
+                cboMovieFilter.SelectedIndex = 0;
+            }
         }
 
         private void LoadRentals()
@@ -138,6 +156,7 @@ namespace MovieRental
                 {
                     displayData.Add(new RentedMovieView
                     {
+                        RentalId = rental.RentalId,
                         MovieTitle = movie.MovieTitle,
                         ClientName = $"{client.FirstName} {client.LastName}",
                         ClientEmail = client.Email,
@@ -150,14 +169,61 @@ namespace MovieRental
 
             dgvRentals.DataSource = null;
             dgvRentals.DataSource = displayData;
+
+            if (dgvRentals.Columns.Contains("RentalId"))
+                dgvRentals.Columns["RentalId"].Visible = false;
         }
 
-        private void CboMovieFilter_SelectedIndexChanged(object sender, EventArgs e)
+        private void BtnReturn_Click(object sender, EventArgs e)
         {
-            LoadRentals();
+            if (dgvRentals.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select a rental to return!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int rentalId = (int)dgvRentals.SelectedRows[0].Cells["RentalId"].Value;
+            var rental = Rental.RentalsList.FirstOrDefault(r => r.RentalId == rentalId);
+
+            if (rental == null)
+            {
+                MessageBox.Show("Rental not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string movieTitle = dgvRentals.SelectedRows[0].Cells["MovieTitle"].Value.ToString();
+
+            DialogResult result = MessageBox.Show($"Return '{movieTitle}'?", "Confirm Return",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                rental.ReturnDate = DateTime.Now;
+
+                var movie = Movie.GetAllMovies().FirstOrDefault(m => m.MovieId == rental.MovieId);
+                if (movie != null)
+                {
+                    movie.IsAvailable = true;
+                }
+
+                Rental.SaveToFile();
+                Movie.SaveToFile();
+
+                MessageBox.Show($"'{movieTitle}' returned successfully!", "Success",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                LoadMovieFilter();
+                LoadRentals();
+            }
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadMovieFilter();
+            LoadRentals();
+        }
+
+        private void CboMovieFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadRentals();
         }
@@ -170,6 +236,7 @@ namespace MovieRental
 
         private class RentedMovieView
         {
+            public int RentalId { get; set; }
             public string MovieTitle { get; set; }
             public string ClientName { get; set; }
             public string ClientEmail { get; set; }

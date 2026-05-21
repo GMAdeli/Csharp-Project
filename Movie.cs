@@ -45,7 +45,7 @@ namespace MovieRental
             Year = year;
             Genre = genre;
             IsAvailable = isAvailable;
-            PricePerDay = 15.0;
+            pricePerDay = 15.0;
             MoviesList.Add(this);
             SaveToFile();
         }

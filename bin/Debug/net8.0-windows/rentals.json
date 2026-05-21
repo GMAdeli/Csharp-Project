@@ -4,7 +4,7 @@
     "MovieId": 3,
     "ClientId": 1,
     "RentalDate": "2026-05-21T12:47:06.8423499+03:00",
-    "ReturnDate": "2026-05-24T12:47:06.8423499+03:00",
+    "ReturnDate": "2026-05-21T14:13:16.7781881+03:00",
     "TotalPrice": 45.0
   },
   {
@@ -12,7 +12,31 @@
     "MovieId": 1,
     "ClientId": 1,
     "RentalDate": "2026-05-21T12:55:08.8323369+03:00",
-    "ReturnDate": "2026-05-24T12:55:08.8323369+03:00",
+    "ReturnDate": "2026-05-21T14:08:27.8107644+03:00",
     "TotalPrice": 45.0
+  },
+  {
+    "RentalId": 3,
+    "MovieId": 2,
+    "ClientId": 1,
+    "RentalDate": "2026-05-21T13:51:10.3304246+03:00",
+    "ReturnDate": "2026-05-21T14:08:40.2983747+03:00",
+    "TotalPrice": 36.01
+  },
+  {
+    "RentalId": 4,
+    "MovieId": 2,
+    "ClientId": 1,
+    "RentalDate": "2026-05-21T14:08:44.6351399+03:00",
+    "ReturnDate": "2026-05-21T14:10:16.0644594+03:00",
+    "TotalPrice": 72.02
+  },
+  {
+    "RentalId": 5,
+    "MovieId": 4,
+    "ClientId": 1,
+    "RentalDate": "2026-05-21T14:09:57.5432436+03:00",
+    "ReturnDate": "2026-05-21T14:10:12.3193397+03:00",
+    "TotalPrice": 104.0
   }
 ]

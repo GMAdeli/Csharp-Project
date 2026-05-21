@@ -26,7 +26,7 @@ namespace MovieRental
         private void InitializeComponent()
         {
             this.Text = "Rent Movie";
-            this.Size = new System.Drawing.Size(550, 480);
+            this.Size = new System.Drawing.Size(550, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -97,15 +97,28 @@ namespace MovieRental
             numDays.Value = 3;
             numDays.ValueChanged += CalculatePrice;
 
-            Label lblPrice = new Label();
-            lblPrice.Text = "Total Price:";
-            lblPrice.Font = new System.Drawing.Font("Segoe UI", 11);
-            lblPrice.Location = new System.Drawing.Point(40, 290);
-            lblPrice.Size = new System.Drawing.Size(120, 30);
+            Label lblPricePerDay = new Label();
+            lblPricePerDay.Text = "Price/day:";
+            lblPricePerDay.Font = new System.Drawing.Font("Segoe UI", 11);
+            lblPricePerDay.Location = new System.Drawing.Point(40, 290);
+            lblPricePerDay.Size = new System.Drawing.Size(120, 30);
+
+            Label lblPricePerDayValue = new Label();
+            lblPricePerDayValue.Name = "lblPricePerDayValue";
+            lblPricePerDayValue.Text = "-";
+            lblPricePerDayValue.Font = new System.Drawing.Font("Segoe UI", 11, FontStyle.Bold);
+            lblPricePerDayValue.Location = new System.Drawing.Point(170, 290);
+            lblPricePerDayValue.Size = new System.Drawing.Size(100, 30);
+
+            Label lblTotal = new Label();
+            lblTotal.Text = "Total Price:";
+            lblTotal.Font = new System.Drawing.Font("Segoe UI", 11);
+            lblTotal.Location = new System.Drawing.Point(40, 330);
+            lblTotal.Size = new System.Drawing.Size(120, 30);
 
             txtTotalPrice = new TextBox();
             txtTotalPrice.Font = new System.Drawing.Font("Segoe UI", 11);
-            txtTotalPrice.Location = new System.Drawing.Point(170, 287);
+            txtTotalPrice.Location = new System.Drawing.Point(170, 327);
             txtTotalPrice.Size = new System.Drawing.Size(150, 28);
             txtTotalPrice.ReadOnly = true;
             txtTotalPrice.Text = "0";
@@ -115,7 +128,7 @@ namespace MovieRental
             btnRent.Font = new System.Drawing.Font("Segoe UI", 11, FontStyle.Bold);
             btnRent.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnRent.ForeColor = System.Drawing.Color.White;
-            btnRent.Location = new System.Drawing.Point(170, 350);
+            btnRent.Location = new System.Drawing.Point(170, 390);
             btnRent.Size = new System.Drawing.Size(130, 40);
             btnRent.FlatStyle = FlatStyle.Flat;
             btnRent.Click += BtnRent_Click;
@@ -124,7 +137,7 @@ namespace MovieRental
             btnCancel.Text = "CANCEL";
             btnCancel.Font = new System.Drawing.Font("Segoe UI", 11);
             btnCancel.BackColor = System.Drawing.Color.LightGray;
-            btnCancel.Location = new System.Drawing.Point(320, 350);
+            btnCancel.Location = new System.Drawing.Point(320, 390);
             btnCancel.Size = new System.Drawing.Size(130, 40);
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.Click += (s, e) => this.Close();
@@ -138,7 +151,9 @@ namespace MovieRental
             this.Controls.Add(dtpRentalDate);
             this.Controls.Add(lblDays);
             this.Controls.Add(numDays);
-            this.Controls.Add(lblPrice);
+            this.Controls.Add(lblPricePerDay);
+            this.Controls.Add(lblPricePerDayValue);
+            this.Controls.Add(lblTotal);
             this.Controls.Add(txtTotalPrice);
             this.Controls.Add(btnRent);
             this.Controls.Add(btnCancel);
@@ -146,20 +161,19 @@ namespace MovieRental
 
         private void LoadMovies()
         {
-            var rentedMovieIds = Rental.RentalsList.Where(r => r.ReturnDate == null || r.ReturnDate > DateTime.Now).Select(r => r.MovieId).ToList();
-            var availableMovies = Movie.GetAllMovies().Where(m => m.IsAvailable && !rentedMovieIds.Contains(m.MovieId)).ToList();
-
-            var displayList = availableMovies.Select(m => new {
-                Display = $"[ID: {m.MovieId}] {m.MovieTitle} ({m.Year})",
-                m.MovieId,
-                m.MovieTitle,
-                m.PricePerDay,
-                m.Genre,
-                m.Year
-            }).ToList();
+            var availableMovies = Movie.GetAllMovies()
+                .Where(m => m.IsAvailable)
+                .Select(m => new {
+                    Display = $"[ID: {m.MovieId}] {m.MovieTitle} ({m.Year}) - {m.PricePerDay:F2} lei/day",
+                    m.MovieId,
+                    m.MovieTitle,
+                    m.PricePerDay,
+                    m.Genre,
+                    m.Year
+                }).ToList();
 
             cboMovie.DataSource = null;
-            cboMovie.DataSource = displayList;
+            cboMovie.DataSource = availableMovies;
             cboMovie.DisplayMember = "Display";
             cboMovie.ValueMember = "MovieId";
         }
@@ -188,6 +202,9 @@ namespace MovieRental
                 int days = (int)numDays.Value;
                 double price = pricePerDay * days;
                 txtTotalPrice.Text = price.ToString("F2") + " lei";
+
+                Label lblPricePerDayValue = (Label)this.Controls.Find("lblPricePerDayValue", true)[0];
+                lblPricePerDayValue.Text = pricePerDay.ToString("F2") + " lei";
             }
         }
 
@@ -228,7 +245,7 @@ namespace MovieRental
                     Movie.SaveToFile();
                 }
 
-                MessageBox.Show($"Movie '{movieTitle}' rented to {clientName}!\nReturn Date: {returnDate:yyyy-MM-dd}\nTotal: {totalPrice:F2} lei",
+                MessageBox.Show($"Movie '{movieTitle}' rented to {clientName}!\nPrice per day: {pricePerDay:F2} lei\nDays: {days}\nReturn Date: {returnDate:yyyy-MM-dd}\nTotal: {totalPrice:F2} lei",
                     "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.Close();
