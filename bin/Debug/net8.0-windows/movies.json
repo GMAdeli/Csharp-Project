@@ -1,0 +1,194 @@
+[
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 1,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 2,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 3,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 4,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 5,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 6,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 7,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 8,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 9,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 10,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 11,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 12,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 13,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 14,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 15,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 16,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 17,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 18,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 19,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 20,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 21,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 22,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 23,
+    "PricePerDay": 5.0
+  },
+  {
+    "MovieTitle": "Movie1",
+    "Genre": 0,
+    "Year": 2026,
+    "IsAvailable": true,
+    "MovieId": 24,
+    "PricePerDay": 15.0
+  }
+]
