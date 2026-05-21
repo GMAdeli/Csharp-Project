@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MovieRental
@@ -16,6 +18,8 @@ namespace MovieRental
         public RentedMoviesForm()
         {
             InitializeComponent();
+            LoadMovieFilter();
+            LoadRentals();
         }
 
         private void InitializeComponent()
@@ -52,8 +56,7 @@ namespace MovieRental
             cboMovieFilter.Location = new System.Drawing.Point(130, 92);
             cboMovieFilter.Size = new System.Drawing.Size(200, 25);
             cboMovieFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboMovieFilter.Items.Add("-- All Movies --");
-            cboMovieFilter.SelectedIndex = 0;
+            cboMovieFilter.SelectedIndexChanged += CboMovieFilter_SelectedIndexChanged;
 
             dgvRentals = new DataGridView();
             dgvRentals.Location = new System.Drawing.Point(20, 130);
@@ -65,8 +68,6 @@ namespace MovieRental
             dgvRentals.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRentals.BackgroundColor = System.Drawing.Color.White;
             dgvRentals.BorderStyle = BorderStyle.FixedSingle;
-            dgvRentals.RowCount = 1;
-            dgvRentals.Rows[0].Cells[0].Value = "No data available";
 
             btnRefresh = new Button();
             btnRefresh.Text = "REFRESH";
@@ -95,9 +96,86 @@ namespace MovieRental
             this.Controls.Add(panelHeader);
         }
 
+        private void LoadMovieFilter()
+        {
+            var movies = Movie.GetAllMovies();
+            var filterList = new List<MovieFilterItem>();
+            filterList.Add(new MovieFilterItem { Id = 0, Name = "-- All Movies --" });
+            foreach (var movie in movies)
+            {
+                filterList.Add(new MovieFilterItem { Id = movie.MovieId, Name = movie.MovieTitle });
+            }
+            cboMovieFilter.DataSource = null;
+            cboMovieFilter.DataSource = filterList;
+            cboMovieFilter.DisplayMember = "Name";
+            cboMovieFilter.ValueMember = "Id";
+        }
+
+        private void LoadRentals()
+        {
+            var rentals = Rental.RentalsList.Where(r => r.ReturnDate == null || r.ReturnDate > DateTime.Now).ToList();
+
+            int filterId = 0;
+            if (cboMovieFilter.SelectedItem != null)
+            {
+                var selectedItem = (MovieFilterItem)cboMovieFilter.SelectedItem;
+                filterId = selectedItem.Id;
+            }
+
+            if (filterId > 0)
+            {
+                rentals = rentals.Where(r => r.MovieId == filterId).ToList();
+            }
+
+            var displayData = new List<RentedMovieView>();
+
+            foreach (var rental in rentals)
+            {
+                Movie movie = Movie.GetAllMovies().FirstOrDefault(m => m.MovieId == rental.MovieId);
+                Client client = Client.GetAllClients().FirstOrDefault(c => c.ClientId == rental.ClientId);
+
+                if (movie != null && client != null)
+                {
+                    displayData.Add(new RentedMovieView
+                    {
+                        MovieTitle = movie.MovieTitle,
+                        ClientName = $"{client.FirstName} {client.LastName}",
+                        ClientEmail = client.Email,
+                        RentalDate = rental.RentalDate,
+                        ReturnDate = rental.ReturnDate.HasValue ? rental.ReturnDate.Value.ToString("yyyy-MM-dd") : "Not returned",
+                        TotalPrice = rental.TotalPrice.ToString("F2") + " lei"
+                    });
+                }
+            }
+
+            dgvRentals.DataSource = null;
+            dgvRentals.DataSource = displayData;
+        }
+
+        private void CboMovieFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadRentals();
+        }
+
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Rented movies display coming soon!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LoadRentals();
+        }
+
+        private class MovieFilterItem
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        private class RentedMovieView
+        {
+            public string MovieTitle { get; set; }
+            public string ClientName { get; set; }
+            public string ClientEmail { get; set; }
+            public DateTime RentalDate { get; set; }
+            public string ReturnDate { get; set; }
+            public string TotalPrice { get; set; }
         }
     }
 }

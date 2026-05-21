@@ -8,6 +8,9 @@ namespace Project
         static void Main()
         {
             ApplicationConfiguration.Initialize();
+            Client.LoadFromFile();
+            Movie.LoadFromFile();
+            Rental.LoadFromFile();
             Application.Run(new MenuForm());
         }
     }

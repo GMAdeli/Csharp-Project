@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MovieRental
@@ -18,6 +19,8 @@ namespace MovieRental
         public RentMovieForm()
         {
             InitializeComponent();
+            LoadMovies();
+            LoadClients();
         }
 
         private void InitializeComponent()
@@ -53,6 +56,7 @@ namespace MovieRental
             cboMovie.Location = new System.Drawing.Point(170, 87);
             cboMovie.Size = new System.Drawing.Size(330, 28);
             cboMovie.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMovie.SelectedIndexChanged += CalculatePrice;
 
             Label lblClient = new Label();
             lblClient.Text = "Select Client:";
@@ -91,6 +95,7 @@ namespace MovieRental
             numDays.Minimum = 1;
             numDays.Maximum = 30;
             numDays.Value = 3;
+            numDays.ValueChanged += CalculatePrice;
 
             Label lblPrice = new Label();
             lblPrice.Text = "Total Price:";
@@ -139,9 +144,99 @@ namespace MovieRental
             this.Controls.Add(btnCancel);
         }
 
+        private void LoadMovies()
+        {
+            var rentedMovieIds = Rental.RentalsList.Where(r => r.ReturnDate == null || r.ReturnDate > DateTime.Now).Select(r => r.MovieId).ToList();
+            var availableMovies = Movie.GetAllMovies().Where(m => m.IsAvailable && !rentedMovieIds.Contains(m.MovieId)).ToList();
+
+            var displayList = availableMovies.Select(m => new {
+                Display = $"[ID: {m.MovieId}] {m.MovieTitle} ({m.Year})",
+                m.MovieId,
+                m.MovieTitle,
+                m.PricePerDay,
+                m.Genre,
+                m.Year
+            }).ToList();
+
+            cboMovie.DataSource = null;
+            cboMovie.DataSource = displayList;
+            cboMovie.DisplayMember = "Display";
+            cboMovie.ValueMember = "MovieId";
+        }
+
+        private void LoadClients()
+        {
+            var displayList = Client.GetAllClients().Select(c => new {
+                Display = $"[ID: {c.ClientId}] {c.FirstName} {c.LastName}",
+                c.ClientId,
+                c.FirstName,
+                c.LastName
+            }).ToList();
+
+            cboClient.DataSource = null;
+            cboClient.DataSource = displayList;
+            cboClient.DisplayMember = "Display";
+            cboClient.ValueMember = "ClientId";
+        }
+
+        private void CalculatePrice(object sender, EventArgs e)
+        {
+            if (cboMovie.SelectedItem != null)
+            {
+                dynamic selected = cboMovie.SelectedItem;
+                double pricePerDay = selected.PricePerDay;
+                int days = (int)numDays.Value;
+                double price = pricePerDay * days;
+                txtTotalPrice.Text = price.ToString("F2") + " lei";
+            }
+        }
+
         private void BtnRent_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Rent functionality coming soon!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                if (cboMovie.SelectedItem == null)
+                {
+                    MessageBox.Show("Select a movie!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (cboClient.SelectedItem == null)
+                {
+                    MessageBox.Show("Select a client!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                dynamic selectedMovie = cboMovie.SelectedItem;
+                dynamic selectedClient = cboClient.SelectedItem;
+
+                int movieId = selectedMovie.MovieId;
+                int clientId = selectedClient.ClientId;
+                string movieTitle = selectedMovie.MovieTitle;
+                string clientName = selectedClient.FirstName;
+                double pricePerDay = selectedMovie.PricePerDay;
+                int days = (int)numDays.Value;
+                double totalPrice = pricePerDay * days;
+                DateTime returnDate = dtpRentalDate.Value.AddDays(days);
+
+                Rental newRental = new Rental(movieId, clientId, dtpRentalDate.Value, returnDate, totalPrice);
+
+                Movie movie = Movie.GetAllMovies().FirstOrDefault(m => m.MovieId == movieId);
+                if (movie != null)
+                {
+                    movie.IsAvailable = false;
+                    Movie.SaveToFile();
+                }
+
+                MessageBox.Show($"Movie '{movieTitle}' rented to {clientName}!\nReturn Date: {returnDate:yyyy-MM-dd}\nTotal: {totalPrice:F2} lei",
+                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

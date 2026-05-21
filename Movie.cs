@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace MovieRental
 {
@@ -16,6 +19,7 @@ namespace MovieRental
         private double pricePerDay;
 
         public static List<Movie> MoviesList = new List<Movie>();
+        private static string filePath = "movies.json";
 
         public string MovieTitle { get => movieTitle; set => movieTitle = value; }
         public Genre Genre { get => genre; set => genre = value; }
@@ -43,6 +47,44 @@ namespace MovieRental
             IsAvailable = isAvailable;
             PricePerDay = 15.0;
             MoviesList.Add(this);
+            SaveToFile();
+        }
+
+        public static void SaveToFile()
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(MoviesList, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving movies: " + ex.Message);
+            }
+        }
+
+        public static void LoadFromFile()
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        MoviesList = JsonConvert.DeserializeObject<List<Movie>>(json);
+                        if (MoviesList == null) MoviesList = new List<Movie>();
+                        if (MoviesList.Count > 0)
+                        {
+                            _count = MoviesList[MoviesList.Count - 1].MovieId;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading movies: " + ex.Message);
+            }
         }
 
         public static List<Movie> GetAllMovies()
