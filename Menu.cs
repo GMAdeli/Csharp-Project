@@ -9,6 +9,7 @@ namespace MovieRental
         private Button btnAddClient;
         private Button btnRentMovie;
         private Button btnRentedMovies;
+        private Button btnStatistics;
         private Button btnExit;
         private Panel panelHeader;
         private Label lblHeader;
@@ -21,7 +22,7 @@ namespace MovieRental
         private void InitializeComponent()
         {
             this.Text = "Movie Rental Store";
-            this.Size = new System.Drawing.Size(500, 520);
+            this.Size = new System.Drawing.Size(500, 580);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -46,7 +47,7 @@ namespace MovieRental
             btnAddMovie.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnAddMovie.ForeColor = System.Drawing.Color.White;
             btnAddMovie.Location = new System.Drawing.Point(125, 100);
-            btnAddMovie.Size = new System.Drawing.Size(250, 50);
+            btnAddMovie.Size = new System.Drawing.Size(250, 45);
             btnAddMovie.FlatStyle = FlatStyle.Flat;
             btnAddMovie.Click += BtnAddMovie_Click;
 
@@ -55,8 +56,8 @@ namespace MovieRental
             btnAddClient.Font = new System.Drawing.Font("Segoe UI", 12, FontStyle.Bold);
             btnAddClient.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnAddClient.ForeColor = System.Drawing.Color.White;
-            btnAddClient.Location = new System.Drawing.Point(125, 170);
-            btnAddClient.Size = new System.Drawing.Size(250, 50);
+            btnAddClient.Location = new System.Drawing.Point(125, 160);
+            btnAddClient.Size = new System.Drawing.Size(250, 45);
             btnAddClient.FlatStyle = FlatStyle.Flat;
             btnAddClient.Click += BtnAddClient_Click;
 
@@ -65,8 +66,8 @@ namespace MovieRental
             btnRentMovie.Font = new System.Drawing.Font("Segoe UI", 12, FontStyle.Bold);
             btnRentMovie.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnRentMovie.ForeColor = System.Drawing.Color.White;
-            btnRentMovie.Location = new System.Drawing.Point(125, 240);
-            btnRentMovie.Size = new System.Drawing.Size(250, 50);
+            btnRentMovie.Location = new System.Drawing.Point(125, 220);
+            btnRentMovie.Size = new System.Drawing.Size(250, 45);
             btnRentMovie.FlatStyle = FlatStyle.Flat;
             btnRentMovie.Click += BtnRentMovie_Click;
 
@@ -75,18 +76,28 @@ namespace MovieRental
             btnRentedMovies.Font = new System.Drawing.Font("Segoe UI", 12, FontStyle.Bold);
             btnRentedMovies.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnRentedMovies.ForeColor = System.Drawing.Color.White;
-            btnRentedMovies.Location = new System.Drawing.Point(125, 310);
-            btnRentedMovies.Size = new System.Drawing.Size(250, 50);
+            btnRentedMovies.Location = new System.Drawing.Point(125, 280);
+            btnRentedMovies.Size = new System.Drawing.Size(250, 45);
             btnRentedMovies.FlatStyle = FlatStyle.Flat;
             btnRentedMovies.Click += BtnRentedMovies_Click;
+
+            btnStatistics = new Button();
+            btnStatistics.Text = "Statistics";
+            btnStatistics.Font = new System.Drawing.Font("Segoe UI", 12, FontStyle.Bold);
+            btnStatistics.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
+            btnStatistics.ForeColor = System.Drawing.Color.White;
+            btnStatistics.Location = new System.Drawing.Point(125, 340);
+            btnStatistics.Size = new System.Drawing.Size(250, 45);
+            btnStatistics.FlatStyle = FlatStyle.Flat;
+            btnStatistics.Click += BtnStatistics_Click;
 
             btnExit = new Button();
             btnExit.Text = "Exit";
             btnExit.Font = new System.Drawing.Font("Segoe UI", 12, FontStyle.Bold);
             btnExit.BackColor = System.Drawing.Color.DarkRed;
             btnExit.ForeColor = System.Drawing.Color.White;
-            btnExit.Location = new System.Drawing.Point(125, 380);
-            btnExit.Size = new System.Drawing.Size(250, 50);
+            btnExit.Location = new System.Drawing.Point(125, 410);
+            btnExit.Size = new System.Drawing.Size(250, 45);
             btnExit.FlatStyle = FlatStyle.Flat;
             btnExit.Click += (s, e) => Application.Exit();
 
@@ -95,6 +106,7 @@ namespace MovieRental
             this.Controls.Add(btnAddClient);
             this.Controls.Add(btnRentMovie);
             this.Controls.Add(btnRentedMovies);
+            this.Controls.Add(btnStatistics);
             this.Controls.Add(btnExit);
         }
 
@@ -120,6 +132,12 @@ namespace MovieRental
         {
             RentedMoviesForm rentedForm = new RentedMoviesForm();
             rentedForm.ShowDialog();
+        }
+
+        private void BtnStatistics_Click(object sender, EventArgs e)
+        {
+            StatisticsForm statsForm = new StatisticsForm();
+            statsForm.ShowDialog();
         }
     }
 }

@@ -1,10 +1,18 @@
 [
   {
-    "MovieTitle": "ad",
-    "Genre": 2,
+    "MovieTitle": "test",
+    "Genre": 0,
     "Year": 2026,
     "IsAvailable": false,
     "MovieId": 1,
+    "PricePerDay": 15.0
+  },
+  {
+    "MovieTitle": "MLP",
+    "Genre": 0,
+    "Year": 2022,
+    "IsAvailable": false,
+    "MovieId": 2,
     "PricePerDay": 15.0
   }
 ]

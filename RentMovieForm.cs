@@ -163,7 +163,8 @@ namespace MovieRental
         {
             var availableMovies = Movie.GetAllMovies()
                 .Where(m => m.IsAvailable)
-                .Select(m => new {
+                .Select(m => new
+                {
                     Display = $"[ID: {m.MovieId}] {m.MovieTitle} ({m.Year}) - {m.PricePerDay:F2} lei/day",
                     m.MovieId,
                     m.MovieTitle,
@@ -180,7 +181,8 @@ namespace MovieRental
 
         private void LoadClients()
         {
-            var displayList = Client.GetAllClients().Select(c => new {
+            var displayList = Client.GetAllClients().Select(c => new
+            {
                 Display = $"[ID: {c.ClientId}] {c.FirstName} {c.LastName}",
                 c.ClientId,
                 c.FirstName,
@@ -234,9 +236,8 @@ namespace MovieRental
                 double pricePerDay = selectedMovie.PricePerDay;
                 int days = (int)numDays.Value;
                 double totalPrice = pricePerDay * days;
-                DateTime returnDate = dtpRentalDate.Value.AddDays(days);
 
-                Rental newRental = new Rental(movieId, clientId, dtpRentalDate.Value, returnDate, totalPrice);
+                Rental newRental = new Rental(movieId, clientId, dtpRentalDate.Value, null, totalPrice);
 
                 Movie movie = Movie.GetAllMovies().FirstOrDefault(m => m.MovieId == movieId);
                 if (movie != null)
@@ -245,7 +246,7 @@ namespace MovieRental
                     Movie.SaveToFile();
                 }
 
-                MessageBox.Show($"Movie '{movieTitle}' rented to {clientName}!\nPrice per day: {pricePerDay:F2} lei\nDays: {days}\nReturn Date: {returnDate:yyyy-MM-dd}\nTotal: {totalPrice:F2} lei",
+                MessageBox.Show($"Movie '{movieTitle}' rented to {clientName}!\nPrice per day: {pricePerDay:F2} lei\nDays: {days}\nTotal: {totalPrice:F2} lei",
                     "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.Close();

@@ -22,3 +22,4 @@ C:\Users\Mihai\Desktop\Porcarii\Facultate\An2\sem2\WAP\Project\Project\Project\b
 C:\Users\Mihai\Desktop\Porcarii\Facultate\An2\sem2\WAP\Project\Project\Project\obj\Debug\net8.0-windows\MoviesRental.csproj.AssemblyReference.cache
 C:\Users\Mihai\Desktop\Porcarii\Facultate\An2\sem2\WAP\Project\Project\Project\obj\Debug\net8.0-windows\MoviesRe.ED91BD12.Up2Date
 C:\Users\Mihai\Desktop\Porcarii\Facultate\An2\sem2\WAP\Project\Project\Project\obj\Debug\net8.0-windows\MovieRental.RentedMoviesForm.resources
+C:\Users\Mihai\Desktop\Porcarii\Facultate\An2\sem2\WAP\Project\Project\Project\obj\Debug\net8.0-windows\MovieRental.StatisticsForm.resources
