@@ -23,7 +23,7 @@ namespace MovieRental
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new Exception("First name cannot be empty!");
+                    throw new MovieRentalException("First name cannot be empty!");
                 firstName = value;
             }
         }
@@ -34,7 +34,7 @@ namespace MovieRental
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new Exception("Last name cannot be empty!");
+                    throw new MovieRentalException("Last name cannot be empty!");
                 lastName = value;
             }
         }
@@ -45,7 +45,7 @@ namespace MovieRental
             set
             {
                 if (!value.Contains("@"))
-                    throw new Exception("Invalid email address!");
+                    throw new MovieRentalException("Invalid email address!");
                 email = value;
             }
         }

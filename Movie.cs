@@ -21,18 +21,30 @@ namespace MovieRental
         public static List<Movie> MoviesList = new List<Movie>();
         private static string filePath = "movies.json";
 
-        public string MovieTitle { get => movieTitle; set => movieTitle = value; }
+        public string MovieTitle
+        {
+            get => movieTitle;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new MovieRentalException("Movie title cannot be empty!");
+                movieTitle = value;
+            }
+        }
+
         public Genre Genre { get => genre; set => genre = value; }
+
         public int Year
         {
             get => year;
             set
             {
                 if (value < 1940)
-                    throw new Exception("Year can't be below 1940!");
+                    throw new MovieRentalException("Year cannot be below 1940!");
                 year = value;
             }
         }
+
         public bool IsAvailable { get => isAvailable; set => isAvailable = value; }
         public int MovieId { get => movieId; }
         public double PricePerDay { get => pricePerDay; set => pricePerDay = value; }
@@ -72,17 +84,33 @@ namespace MovieRental
                     string json = File.ReadAllText(filePath);
                     if (!string.IsNullOrWhiteSpace(json))
                     {
-                        MoviesList = JsonConvert.DeserializeObject<List<Movie>>(json);
-                        if (MoviesList == null) MoviesList = new List<Movie>();
-                        if (MoviesList.Count > 0)
+                        var temp = JsonConvert.DeserializeObject<List<Movie>>(json);
+                        if (temp != null && temp.Count > 0 && temp[0] != null)
                         {
-                            _count = MoviesList[MoviesList.Count - 1].MovieId;
+                            MoviesList = temp;
+                            if (MoviesList.Count > 0)
+                            {
+                                _count = MoviesList[MoviesList.Count - 1].MovieId;
+                            }
+                        }
+                        else
+                        {
+                            MoviesList = new List<Movie>();
                         }
                     }
+                    else
+                    {
+                        MoviesList = new List<Movie>();
+                    }
+                }
+                else
+                {
+                    MoviesList = new List<Movie>();
                 }
             }
             catch (Exception ex)
             {
+                MoviesList = new List<Movie>();
                 MessageBox.Show("Error loading movies: " + ex.Message);
             }
         }

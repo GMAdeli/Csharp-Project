@@ -20,8 +20,29 @@ namespace MovieRental
         private static string filePath = "rentals.json";
 
         public int RentalId { get => rentalId; }
-        public int MovieId { get => movieId; set => movieId = value; }
-        public int ClientId { get => clientId; set => clientId = value; }
+
+        public int MovieId
+        {
+            get => movieId;
+            set
+            {
+                if (value <= 0)
+                    throw new MovieRentalException("Invalid Movie ID!");
+                movieId = value;
+            }
+        }
+
+        public int ClientId
+        {
+            get => clientId;
+            set
+            {
+                if (value <= 0)
+                    throw new MovieRentalException("Invalid Client ID!");
+                clientId = value;
+            }
+        }
+
         public DateTime RentalDate { get => rentalDate; set => rentalDate = value; }
         public DateTime? ReturnDate { get => returnDate; set => returnDate = value; }
         public double TotalPrice { get => totalPrice; set => totalPrice = value; }

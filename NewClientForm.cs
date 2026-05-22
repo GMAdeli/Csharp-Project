@@ -272,6 +272,10 @@ namespace MovieRental
                 var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
                 if (mainForm != null) mainForm.UpdateStatusStrip();
             }
+            catch (MovieRentalException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -302,20 +306,31 @@ namespace MovieRental
                 return;
             }
 
-            selectedClient.Email = txtEditEmail.Text;
-            Client.SaveToFile();
+            try
+            {
+                selectedClient.Email = txtEditEmail.Text;
+                Client.SaveToFile();
 
-            MessageBox.Show($"Client '{selectedClient.FirstName} {selectedClient.LastName}' email updated!", "Success",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Client '{selectedClient.FirstName} {selectedClient.LastName}' email updated!", "Success",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            LoadClients();
-            btnUpdate.Enabled = false;
-            lblSelectedClientName.Text = "-";
-            txtEditEmail.Clear();
-            errorProvider.Clear();
+                LoadClients();
+                btnUpdate.Enabled = false;
+                lblSelectedClientName.Text = "-";
+                txtEditEmail.Clear();
+                errorProvider.Clear();
 
-            var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
-            if (mainForm != null) mainForm.UpdateStatusStrip();
+                var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+                if (mainForm != null) mainForm.UpdateStatusStrip();
+            }
+            catch (MovieRentalException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

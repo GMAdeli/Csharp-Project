@@ -25,13 +25,6 @@ namespace MovieRental
 
         public MenuForm()
         {
-            InitializeComponent();
-            UpdateStatusStrip();
-            StartTimer();
-        }
-
-        private void InitializeComponent()
-        {
             this.Text = "Movie Rental Store";
             this.Size = new System.Drawing.Size(500, 680);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -150,6 +143,9 @@ namespace MovieRental
             this.Controls.Add(btnShortcuts);
             this.Controls.Add(btnExit);
             this.Controls.Add(statusStrip);
+
+            UpdateStatusStrip();
+            StartTimer();
         }
 
         private void StartTimer()
