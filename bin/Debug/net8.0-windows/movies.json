@@ -19,8 +19,8 @@
     "MovieTitle": "IT 2",
     "Genre": 0,
     "Year": 2019,
-    "IsAvailable": false,
+    "IsAvailable": true,
     "MovieId": 3,
-    "PricePerDay": 20.0
+    "PricePerDay": 15.0
   }
 ]

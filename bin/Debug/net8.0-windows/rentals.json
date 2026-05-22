@@ -20,7 +20,7 @@
     "MovieId": 3,
     "ClientId": 1,
     "RentalDate": "2026-05-23T00:21:41.968144+03:00",
-    "ReturnDate": null,
+    "ReturnDate": "2026-05-23T00:33:02.0166307+03:00",
     "TotalPrice": 60.0
   }
 ]

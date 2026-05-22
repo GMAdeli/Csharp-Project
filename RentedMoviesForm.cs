@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Printing;
 
 namespace MovieRental
 {
@@ -13,7 +15,10 @@ namespace MovieRental
         private Label lblHeader;
         private Button btnReturn;
         private Button btnExportReport;
+        private Button btnPrintPreview;
         private ContextMenuStrip contextMenu;
+        private PrintDocument printDocument;
+        private PrintPreviewDialog printPreviewDialog;
 
         private List<RentedMovieView> currentDisplayData;
 
@@ -21,12 +26,13 @@ namespace MovieRental
         {
             InitializeComponent();
             LoadRentals();
+            SetupPrinting();
         }
 
         private void InitializeComponent()
         {
             this.Text = "Currently Rented Movies";
-            this.Size = new System.Drawing.Size(1100, 600);
+            this.Size = new System.Drawing.Size(1100, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -88,7 +94,7 @@ namespace MovieRental
             btnReturn.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnReturn.ForeColor = System.Drawing.Color.White;
             btnReturn.Location = new System.Drawing.Point(20, 500);
-            btnReturn.Size = new System.Drawing.Size(180, 40);
+            btnReturn.Size = new System.Drawing.Size(160, 40);
             btnReturn.FlatStyle = FlatStyle.Flat;
             btnReturn.Click += BtnReturn_Click;
 
@@ -97,15 +103,121 @@ namespace MovieRental
             btnExportReport.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnExportReport.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnExportReport.ForeColor = System.Drawing.Color.White;
-            btnExportReport.Location = new System.Drawing.Point(940, 500);
+            btnExportReport.Location = new System.Drawing.Point(190, 500);
             btnExportReport.Size = new System.Drawing.Size(140, 40);
             btnExportReport.FlatStyle = FlatStyle.Flat;
             btnExportReport.Click += BtnExportReport_Click;
 
+            btnPrintPreview = new Button();
+            btnPrintPreview.Text = "&Print Preview";
+            btnPrintPreview.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
+            btnPrintPreview.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
+            btnPrintPreview.ForeColor = System.Drawing.Color.White;
+            btnPrintPreview.Location = new System.Drawing.Point(340, 500);
+            btnPrintPreview.Size = new System.Drawing.Size(140, 40);
+            btnPrintPreview.FlatStyle = FlatStyle.Flat;
+            btnPrintPreview.Click += BtnPrintPreview_Click;
+
             this.Controls.Add(dgvRentals);
             this.Controls.Add(btnReturn);
             this.Controls.Add(btnExportReport);
+            this.Controls.Add(btnPrintPreview);
             this.Controls.Add(panelHeader);
+        }
+
+        private void SetupPrinting()
+        {
+            printDocument = new PrintDocument();
+            printPreviewDialog = new PrintPreviewDialog();
+            printDocument.PrintPage += PrintDocument_PrintPage;
+            printPreviewDialog.Document = printDocument;
+        }
+
+        private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            Font titleFont = new Font("Segoe UI", 16, FontStyle.Bold);
+            Font headerFont = new Font("Segoe UI", 10, FontStyle.Bold);
+            Font dataFont = new Font("Segoe UI", 9, FontStyle.Regular);
+
+            float lineHeight = 22;
+            float x = 50;
+            float y = 50;
+
+            g.DrawString("CURRENTLY RENTED MOVIES", titleFont, Brushes.Black, x, y);
+            y += 35;
+
+            g.DrawString($"Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}", dataFont, Brushes.Black, x, y);
+            y += 25;
+
+            g.DrawLine(Pens.Black, x, y, 750, y);
+            y += 15;
+
+            float[] columnWidths = { 60, 160, 140, 180, 80, 70 };
+            string[] headers = { "ID", "Title", "Client", "Email", "Date", "Price" };
+
+            float currentX = x;
+            for (int i = 0; i < headers.Length; i++)
+            {
+                g.DrawString(headers[i], headerFont, Brushes.Black, currentX, y);
+                currentX += columnWidths[i];
+            }
+
+            y += lineHeight;
+            g.DrawLine(Pens.Black, x, y, 750, y);
+            y += 10;
+
+            var displayData = currentDisplayData.Select(d => new
+            {
+                d.MovieId,
+                d.MovieTitle,
+                d.ClientName,
+                d.ClientEmail,
+                RentalDate = d.RentalDate.ToString("yyyy-MM-dd"),
+                d.TotalPrice
+            }).ToList();
+
+            foreach (var item in displayData)
+            {
+                currentX = x;
+
+                g.DrawString(item.MovieId.ToString(), dataFont, Brushes.Black, currentX, y);
+                currentX += columnWidths[0];
+
+                string title = item.MovieTitle.Length > 18 ? item.MovieTitle.Substring(0, 16) + ".." : item.MovieTitle;
+                g.DrawString(title, dataFont, Brushes.Black, currentX, y);
+                currentX += columnWidths[1];
+
+                string client = item.ClientName.Length > 16 ? item.ClientName.Substring(0, 14) + ".." : item.ClientName;
+                g.DrawString(client, dataFont, Brushes.Black, currentX, y);
+                currentX += columnWidths[2];
+
+                string email = item.ClientEmail.Length > 22 ? item.ClientEmail.Substring(0, 20) + ".." : item.ClientEmail;
+                g.DrawString(email, dataFont, Brushes.Black, currentX, y);
+                currentX += columnWidths[3];
+
+                g.DrawString(item.RentalDate, dataFont, Brushes.Black, currentX, y);
+                currentX += columnWidths[4];
+
+                g.DrawString(item.TotalPrice, dataFont, Brushes.Black, currentX, y);
+
+                y += lineHeight;
+
+                if (y + lineHeight > 750)
+                {
+                    e.HasMorePages = true;
+                    return;
+                }
+            }
+
+            y += 15;
+            g.DrawLine(Pens.Black, x, y, 750, y);
+            y += 15;
+
+            g.DrawString($"Total active rentals: {displayData.Count}", dataFont, Brushes.Black, x, y);
+
+            e.HasMorePages = false;
         }
 
         private void LoadRentals()
@@ -286,6 +398,17 @@ namespace MovieRental
                     MessageBox.Show($"Report exported to:\n{saveDialog.FileName}", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+        }
+
+        private void BtnPrintPreview_Click(object sender, EventArgs e)
+        {
+            if (currentDisplayData == null || currentDisplayData.Count == 0)
+            {
+                MessageBox.Show("No data to print!", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            printPreviewDialog.ShowDialog();
         }
 
         private class RentedMovieView
