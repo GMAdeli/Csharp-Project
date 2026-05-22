@@ -106,7 +106,7 @@ namespace MovieRental
             txtEmail.Size = new System.Drawing.Size(240, 25);
 
             btnSave = new Button();
-            btnSave.Text = "ADD CLIENT";
+            btnSave.Text = "&Add Client";
             btnSave.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnSave.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnSave.ForeColor = System.Drawing.Color.White;
@@ -156,7 +156,7 @@ namespace MovieRental
             txtEditEmail.Size = new System.Drawing.Size(240, 25);
 
             btnUpdate = new Button();
-            btnUpdate.Text = "UPDATE EMAIL";
+            btnUpdate.Text = "&Update Email";
             btnUpdate.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnUpdate.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnUpdate.ForeColor = System.Drawing.Color.White;
@@ -268,6 +268,9 @@ namespace MovieRental
                 errorProvider.Clear();
                 txtFirstName.Focus();
                 LoadClients();
+
+                var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+                if (mainForm != null) mainForm.UpdateStatusStrip();
             }
             catch (Exception ex)
             {
@@ -310,6 +313,9 @@ namespace MovieRental
             lblSelectedClientName.Text = "-";
             txtEditEmail.Clear();
             errorProvider.Clear();
+
+            var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+            if (mainForm != null) mainForm.UpdateStatusStrip();
         }
     }
 }

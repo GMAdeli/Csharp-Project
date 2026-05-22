@@ -124,7 +124,7 @@ namespace MovieRental
             txtTotalPrice.Text = "0";
 
             btnRent = new Button();
-            btnRent.Text = "RENT";
+            btnRent.Text = "&Rent";
             btnRent.Font = new System.Drawing.Font("Segoe UI", 11, FontStyle.Bold);
             btnRent.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnRent.ForeColor = System.Drawing.Color.White;
@@ -134,7 +134,7 @@ namespace MovieRental
             btnRent.Click += BtnRent_Click;
 
             btnCancel = new Button();
-            btnCancel.Text = "CANCEL";
+            btnCancel.Text = "&Cancel";
             btnCancel.Font = new System.Drawing.Font("Segoe UI", 11);
             btnCancel.BackColor = System.Drawing.Color.LightGray;
             btnCancel.Location = new System.Drawing.Point(320, 390);
@@ -163,8 +163,7 @@ namespace MovieRental
         {
             var availableMovies = Movie.GetAllMovies()
                 .Where(m => m.IsAvailable)
-                .Select(m => new
-                {
+                .Select(m => new {
                     Display = $"[ID: {m.MovieId}] {m.MovieTitle} ({m.Year}) - {m.PricePerDay:F2} lei/day",
                     m.MovieId,
                     m.MovieTitle,
@@ -181,8 +180,7 @@ namespace MovieRental
 
         private void LoadClients()
         {
-            var displayList = Client.GetAllClients().Select(c => new
-            {
+            var displayList = Client.GetAllClients().Select(c => new {
                 Display = $"[ID: {c.ClientId}] {c.FirstName} {c.LastName}",
                 c.ClientId,
                 c.FirstName,
@@ -248,6 +246,9 @@ namespace MovieRental
 
                 MessageBox.Show($"Movie '{movieTitle}' rented to {clientName}!\nPrice per day: {pricePerDay:F2} lei\nDays: {days}\nTotal: {totalPrice:F2} lei",
                     "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+                if (mainForm != null) mainForm.UpdateStatusStrip();
 
                 this.Close();
             }

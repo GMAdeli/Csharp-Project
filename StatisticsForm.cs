@@ -35,12 +35,8 @@ namespace MovieRental
                 Font messageFont = new Font("Segoe UI", 16, FontStyle.Bold);
                 Font subFont = new Font("Segoe UI", 12, FontStyle.Regular);
 
-                g.DrawString("🎬 NO MOVIES IN DATABASE", messageFont, Brushes.DarkSlateBlue, 280, 200);
+                g.DrawString("NO MOVIES IN DATABASE", messageFont, Brushes.DarkSlateBlue, 280, 200);
                 g.DrawString("Go to 'Add Movie' and add some movies first!", subFont, Brushes.Gray, 270, 250);
-
-                g.DrawLine(new Pen(Brushes.LightGray, 2), 150, 290, 700, 290);
-
-                g.DrawString("Tip: Add movies, then rent them to see statistics", new Font("Segoe UI", 10, FontStyle.Italic), Brushes.DimGray, 260, 320);
                 return;
             }
 
@@ -49,12 +45,8 @@ namespace MovieRental
                 Font messageFont = new Font("Segoe UI", 16, FontStyle.Bold);
                 Font subFont = new Font("Segoe UI", 12, FontStyle.Regular);
 
-                g.DrawString("📀 NO RENTALS YET", messageFont, Brushes.DarkSlateBlue, 300, 200);
+                g.DrawString("NO RENTALS YET", messageFont, Brushes.DarkSlateBlue, 300, 200);
                 g.DrawString("Rent some movies to see statistics here!", subFont, Brushes.Gray, 290, 250);
-
-                g.DrawLine(new Pen(Brushes.LightGray, 2), 150, 290, 700, 290);
-
-                g.DrawString("Tip: Go to 'Rent Movie' and rent a few movies", new Font("Segoe UI", 10, FontStyle.Italic), Brushes.DimGray, 280, 320);
                 return;
             }
 
@@ -83,15 +75,15 @@ namespace MovieRental
 
             int chartWidth = 450;
             int chartHeight = 300;
-            int startX = 120;
+            int startX = 150;
             int startY = 130;
-            int barWidth = 70;
-            int spacing = 50;
+            int barWidth = 80;
+            int spacing = 60;
 
             Font titleFont = new Font("Segoe UI", 14, FontStyle.Bold);
             g.DrawString("TOP 3 MOST RENTED MOVIES", titleFont, Brushes.DarkSlateBlue, 280, 30);
 
-            Font labelFont = new Font("Segoe UI", 9, FontStyle.Regular);
+            Font labelFont = new Font("Segoe UI", 10, FontStyle.Regular);
 
             for (int i = 0; i < rentalCounts.Count; i++)
             {
@@ -111,7 +103,7 @@ namespace MovieRental
                 if (movieName.Length > 12) movieName = movieName.Substring(0, 10) + "...";
                 g.DrawString(movieName, labelFont, Brushes.Black, x + 5, startY + chartHeight + 5);
 
-                g.DrawString(item.Count.ToString(), new Font("Segoe UI", 8, FontStyle.Bold), Brushes.Black, x + barWidth / 2 - 8, y - 18);
+                g.DrawString(item.Count.ToString(), new Font("Segoe UI", 9, FontStyle.Bold), Brushes.Black, x + barWidth / 2 - 8, y - 18);
             }
 
             g.DrawLine(Pens.Black, startX - 10, startY + chartHeight, startX + chartWidth + 30, startY + chartHeight);
@@ -127,22 +119,6 @@ namespace MovieRental
 
             g.DrawString("Movies", labelFont, Brushes.Black, startX + chartWidth / 2 - 20, startY + chartHeight + 35);
             g.DrawString("Times Rented", labelFont, Brushes.Black, startX - 80, startY + chartHeight / 2, new StringFormat() { FormatFlags = StringFormatFlags.DirectionVertical });
-
-            int legendX = startX + chartWidth + 60;
-            int legendY = startY;
-            Font legendTitleFont = new Font("Segoe UI", 10, FontStyle.Bold);
-            Font legendFont = new Font("Segoe UI", 9, FontStyle.Regular);
-
-            g.DrawString("Legend:", legendTitleFont, Brushes.Black, legendX, legendY);
-
-            for (int i = 0; i < rentalCounts.Count; i++)
-            {
-                var item = rentalCounts[i];
-                int colorBoxY = legendY + 25 + (i * 22);
-                g.FillRectangle(Brushes.SteelBlue, legendX, colorBoxY, 14, 14);
-                g.DrawRectangle(Pens.Black, legendX, colorBoxY, 14, 14);
-                g.DrawString($"{item.Movie.MovieTitle} - {item.Count} time(s)", legendFont, Brushes.Black, legendX + 20, colorBoxY + 2);
-            }
         }
     }
 }

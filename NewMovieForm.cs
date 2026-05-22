@@ -137,7 +137,7 @@ namespace MovieRental
             chkAvailable.Checked = true;
 
             btnSave = new Button();
-            btnSave.Text = "ADD MOVIE";
+            btnSave.Text = "&Add Movie";
             btnSave.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnSave.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnSave.ForeColor = System.Drawing.Color.White;
@@ -178,7 +178,7 @@ namespace MovieRental
             lblSelectedMovieName.Size = new System.Drawing.Size(240, 25);
 
             btnDelete = new Button();
-            btnDelete.Text = "DELETE MOVIE";
+            btnDelete.Text = "&Delete Movie";
             btnDelete.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnDelete.BackColor = System.Drawing.Color.DarkRed;
             btnDelete.ForeColor = System.Drawing.Color.White;
@@ -309,6 +309,9 @@ namespace MovieRental
                 errorProvider.Clear();
                 txtTitle.Focus();
                 LoadMovies();
+
+                var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+                if (mainForm != null) mainForm.UpdateStatusStrip();
             }
             catch (Exception ex)
             {
@@ -338,6 +341,9 @@ namespace MovieRental
                 lblSelectedMovieName.Text = "-";
                 btnDelete.Enabled = false;
                 errorProvider.Clear();
+
+                var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+                if (mainForm != null) mainForm.UpdateStatusStrip();
             }
         }
     }

@@ -1,18 +1,26 @@
 [
   {
-    "MovieTitle": "test",
-    "Genre": 0,
-    "Year": 2026,
-    "IsAvailable": false,
+    "MovieTitle": "Men in Black",
+    "Genre": 3,
+    "Year": 2007,
+    "IsAvailable": true,
     "MovieId": 1,
     "PricePerDay": 15.0
   },
   {
-    "MovieTitle": "MLP",
+    "MovieTitle": "IT",
     "Genre": 0,
-    "Year": 2022,
+    "Year": 2017,
     "IsAvailable": false,
     "MovieId": 2,
-    "PricePerDay": 15.0
+    "PricePerDay": 18.0
+  },
+  {
+    "MovieTitle": "IT 2",
+    "Genre": 0,
+    "Year": 2019,
+    "IsAvailable": false,
+    "MovieId": 3,
+    "PricePerDay": 20.0
   }
 ]

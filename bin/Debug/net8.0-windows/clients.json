@@ -1,8 +1,14 @@
 [
   {
-    "FirstName": "i",
-    "LastName": "d",
-    "Email": "dfg@",
+    "FirstName": "Andrew",
+    "LastName": "Garfield",
+    "Email": "real.ag@gmail.com",
     "ClientId": 1
+  },
+  {
+    "FirstName": "George",
+    "LastName": "Washington",
+    "Email": "gw@yahoo.com",
+    "ClientId": 2
   }
 ]

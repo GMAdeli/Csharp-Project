@@ -60,18 +60,18 @@ namespace MovieRental
 
             contextMenu = new ContextMenuStrip();
 
-            ToolStripMenuItem sortById = new ToolStripMenuItem("Sort by ID");
+            ToolStripMenuItem sortById = new ToolStripMenuItem("&Sort by ID");
             sortById.Click += SortById_Click;
 
-            ToolStripMenuItem sortByName = new ToolStripMenuItem("Sort by Name");
+            ToolStripMenuItem sortByName = new ToolStripMenuItem("&Sort by Name");
             sortByName.Click += SortByName_Click;
 
-            ToolStripMenuItem sortByPrice = new ToolStripMenuItem("Sort by Price");
+            ToolStripMenuItem sortByPrice = new ToolStripMenuItem("&Sort by Price");
             sortByPrice.Click += SortByPrice_Click;
 
             ToolStripMenuItem separator = new ToolStripMenuItem("-");
 
-            ToolStripMenuItem refreshMenu = new ToolStripMenuItem("Refresh");
+            ToolStripMenuItem refreshMenu = new ToolStripMenuItem("&Refresh");
             refreshMenu.Click += BtnRefresh_Click;
 
             contextMenu.Items.Add(sortById);
@@ -83,7 +83,7 @@ namespace MovieRental
             dgvRentals.ContextMenuStrip = contextMenu;
 
             btnReturn = new Button();
-            btnReturn.Text = "RETURN SELECTED MOVIE";
+            btnReturn.Text = "&Return Selected Movie";
             btnReturn.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnReturn.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnReturn.ForeColor = System.Drawing.Color.White;
@@ -93,7 +93,7 @@ namespace MovieRental
             btnReturn.Click += BtnReturn_Click;
 
             btnExportReport = new Button();
-            btnExportReport.Text = "EXPORT REPORT";
+            btnExportReport.Text = "&Export Report";
             btnExportReport.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnExportReport.BackColor = System.Drawing.Color.FromArgb(54, 70, 214);
             btnExportReport.ForeColor = System.Drawing.Color.White;
@@ -232,6 +232,9 @@ namespace MovieRental
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     LoadRentals();
+
+                    var mainForm = Application.OpenForms.OfType<MenuForm>().FirstOrDefault();
+                    if (mainForm != null) mainForm.UpdateStatusStrip();
                 }
             }
         }
